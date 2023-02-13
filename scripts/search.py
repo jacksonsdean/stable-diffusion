@@ -4,21 +4,9 @@ from torch import autocast
 import random
 import matplotlib.pyplot as plt
 import os
+from walk import prompt_n_seed
 
-
-prompts = [
-          "a man-eating dustbunny that will soon roam the neighborhood",
-"A cute gecko eating a huge oreo",
-"A rubber duck on a chess board",
-"A  beautiful painting of butterflies flying in golden light",
-"A  beautiful painting of a rooster reading an algebra textbook",
-"A caterpillar doing math homework",
-"A museum skeleton of a T-Rex",
-"Fish playing soccer at the world cup",
-"Flowers playing violin",
-"A close-up of a violin in a bed of flowers"                           ,                       
-]
-
+prompts = list(prompt_n_seed.keys())
 
 # make sure you're logged in with `huggingface-cli login`
 pipe = StableDiffusionPipeline.from_pretrained("CompVis/stable-diffusion-v1-4", 
@@ -34,9 +22,10 @@ def infer(prompt, num_inference_steps=50,
     w = width//8*8
     h = height//8*8
     with autocast("cuda"):
-        image = pipe(prompt, guidance_scale=7.5, 
+        output = pipe(prompt, guidance_scale=guidance_scale, 
                     generator=generator, width=w, height=h, 
-                    num_inference_steps=num_inference_steps)["sample"][0]
+                    num_inference_steps=num_inference_steps)
+        image = output.images[0]
     return image
 
 
@@ -49,12 +38,12 @@ for p in prompts:
     if not os.path.exists(f"imagery/{prompt_orig}"):
         os.mkdir(f"imagery/{prompt_orig}/")
 
-    HM = 200
+    HM = 10
     for i in range(HM):
         print(f"{i+1}/{HM}")
         prompt_to_use = prompt_orig
         seed = random.randint(0, 10000)
-        print(seed)
-        image = infer(prompt_to_use, num_inference_steps=75, 
+        print("seed:", seed)
+        image = infer(prompt_to_use, num_inference_steps=50, 
                       seed=seed, width=512, height=512)
         image.save(f"imagery/{prompt_to_use}/{seed}.png")
