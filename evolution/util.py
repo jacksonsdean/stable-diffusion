@@ -5,7 +5,7 @@ import numpy as np
 import torch
 import torchvision.transforms.functional as F
 
-def save(imgs, path):
+def save(imgs, path,text=False):
     os.makedirs(os.path.dirname(path), exist_ok=True)
     if not isinstance(imgs, list):
         imgs = [imgs]
@@ -15,6 +15,10 @@ def save(imgs, path):
         img = F.to_pil_image(img)
         axs[0, i].imshow(np.asarray(img))
         axs[0, i].set(xticklabels=[], yticklabels=[], xticks=[], yticks=[])
+        if text:
+            x = 0.5 *i
+            y = 0.5
+            axs[0, i].text(x, y, f"{i}")
     plt.savefig(path, bbox_inches="tight", pad_inches=0)
 
 
