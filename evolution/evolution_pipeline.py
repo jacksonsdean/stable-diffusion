@@ -49,7 +49,9 @@ class EvolutionPipeline(StableDiffusionPipeline):
         def prepare_latents(self, batch_size, num_channels_latents, height, width, dtype, device, generator, latents=None):
             # return super().prepare_latents(batch_size, num_channels_latents, height, width, dtype, device, generator, latents)
             if self.replay is not None:
-                return torch.cat(self.history).to(device)
+                # out = torch.stack(self.history, dim=0).to(device)
+                out = self.history.to(device)
+                return out
                 # out = self.history[self.replay].to(device)
                 # self.replay += 1
                 # return out

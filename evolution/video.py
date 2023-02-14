@@ -21,51 +21,42 @@ if __name__ == "__main__":
     
     # prompt = "a perfectly round sphere bathed in golden yellow rays of beautiful sunshine, abstract digital painting. Trending on artstation."
     prompt = "love is golden yellow sunshine, abstract digital painting. Trending on artstation."
+    # latent_history = torch.load( f"outputs/history_{prompt}.pt")
     
     
-    latent_history = torch.load( f"outputs/history_{prompt}.pt")
+    latent_history = torch.load( f"outputs/hist.pt")
     
-    hist = [e for e in latent_history]
+    hist = [e for e in latent_history][:-1]
+    print(len(hist))
     images = []
     
-    interps_per_image = 10
-    smoothing_inters = 10
+    interps_per_image = 12
+    smoothing_inters = 12
     
     interps = []
     for i in range(len(hist)-1):
-        interps.append(torch.tensor(np.linspace(hist[i].cpu().numpy(), hist[i+1].cpu().numpy(), interps_per_image)))
-    # interps = torch.cat(interps)
-
-    pipeline.replay_mode()
-    pipeline.enable_attention_slicing(slice_size="max") 
-    pipeline.enable_vae_slicing()
+        # interps.append(torch.tensor(np.linspace(hist[i].cpu().numpy(), hist[i+1].cpu().numpy(), interps_per_image)))
+        intp = torch.tensor(np.linspace(hist[i].cpu().numpy(), hist[i+1].cpu().numpy(), interps_per_image))
+        for j in range(interps_per_image):
+            interps.append(intp[j])
     
-    batch_size = 1
+    # interps = hist
+    # interps = torch.cat(interps)
+    pipeline.replay_mode()
+    # pipeline.enable_attention_slicing(slice_size="max") 
+    # pipeline.enable_vae_slicing()
+    
+    batch_size = 8
     batch_indx = 0
     images = []
     pbar = tqdm(total=len(interps))
     
     
-    
-    pipeline.history = [interps[0], interps[1]]
-
-    outputs = pipeline(
-        prompt=prompt,
-        # prompt_embeds = embeddings[i].unsqueeze(0),
-        height=512,  # use multiples of 64 if > 512. Multiples of 8 if < 512.
-        width=512,   # use multiples of 64 if > 512. Multiples of 8 if < 512.
-        guidance_scale=7.5,         
-        num_inference_steps=50,     
-        generator=None,      
-        num_images_per_prompt = 1
-    )
-
-    
-    
-    
-    
     while len(images) < len(interps):
-        pipeline.history = interps[batch_indx:min(batch_indx+batch_size, len(images)-1)]
+        # pipeline.history = interps[batch_indx:min(batch_indx+batch_size, len(images)-1)]
+        pipeline.history = torch.stack(interps[batch_indx:min(batch_indx+batch_size, len(interps))], dim=0)
+        # print(pipeline.history.shape)
+        # print([h.shape for h in pipeline.history])
         g = torch.Generator(device=pipeline.device).manual_seed(seed)
         outputs = pipeline(
             prompt=prompt,
@@ -74,8 +65,10 @@ if __name__ == "__main__":
             width=512,   # use multiples of 64 if > 512. Multiples of 8 if < 512.
             guidance_scale=7.5,         
             num_inference_steps=50,     
-            generator=g,      
-            num_images_per_prompt = 1
+            # generator=g,      
+            num_images_per_prompt = pipeline.history.shape[0],
+            output_type="numpy"
+            
         )
         images.extend(outputs[0])
         pbar.update(len(outputs[0]))
@@ -83,9 +76,14 @@ if __name__ == "__main__":
     # images.append(outputs[0][0])
     
     images_interps = []
-    for image in images:
+    for i in range(1, len(images)-1):
         # interpolate between images
-        images_interps.append(torch.tensor(np.linspace(image.cpu().numpy(), images[images.index(image)+1].cpu().numpy(), smoothing_inters),device=device))
+        # intp = np.linspace(images[i-1], images[i], smoothing_inters//2)
+        # images_interps.extend(pipeline.numpy_to_pil(intp))
+        # intp = np.linspace(images[i], images[i+1], smoothing_inters//2)
+        # intp = np.linspace(images[i-1], images[i+1], smoothing_inters)
+        intp = np.linspace(images[i], images[i+1], smoothing_inters//2)
+        images_interps.extend(pipeline.numpy_to_pil(intp))
     
         
 
