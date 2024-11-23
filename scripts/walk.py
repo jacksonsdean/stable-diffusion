@@ -1,43 +1,38 @@
-# from stable_diffusion_videos.stable_diffusion_walk import walk
 from stable_diffusion_videos import StableDiffusionWalkPipeline
 import torch
 
+
 prompt_n_seed = {
-    "a cute, beautiful painting of a ball of hair that will soon roam the neighborhood riding a unicycle": 743,
-    "A cute gecko eating a huge oreo": 140,
-    "A rubber duck on a chess board": 40,
-    "A  beautiful painting of butterflies flying in golden light": 560,
-    "A  beautiful painting of a rooster reading an algebra textbook": 996,
-    "A caterpillar doing math homework": 283,
-    "A sparse black and white painting of a museum skeleton of a T-Rex. The ground is wet and reflective.": 116,
-    "Fish playing soccer at the world cup": 277,
-    "Flowers playing violin": 277,
-    "A close-up of a violin in a bed of flowers": 277,
+        # "Many yellow leaves showering from an aspen tree in a forest of aspens, bright yellow sunlight": None,
+        # "A photorealistic closeup texture of a detailed rough stone with many colors, volumetric lighting": None,
+        # "A psychedelic, patterned bird with spread wings, in a pastel color scheme": None,
+        # "A blizzard of white birds over an icy lake": None,
+        # "A photo of a distant flock of black birds flying on a white sky over a snow-covered neighborhood with big puffs of billowing steam from the roofs 8K": None,
+        # "A high-quality 8k photo of a distant murmuration of black birds flying on a white sky over snow-covered homes with big puffs of billowing steam from the chimneys": None,
+        "Big puffs of steam coming from snow-covered homes and a murmuration of black birds. 8k photo.": None,
+        # "A photo of an iridescent vibrant rooster standing on one foot on top of a large book of math equations in a sunny park": None,
+        # "A photo of two colorful parakeets nuzzling in a lush rainforest, volumetric lighting": None,
+        # "An otherworldly vast dark desert with footprints in the sky": None,
+        # "Footprints across the vast dark blue sky": None,
+        # # "Glowing moon-like lanterns in the darkness on a winding path": None,
+        # "An oil painting with a blue color scheme of a mysterious underwater satellite with bubbles and refracted light": None,
+        # "A vibrant, psychedelic moon in the style of Alex Grey": None,
+        # "A tall, cute, pastel apartment building with a balcony high in the air with a cat sitting on the balcony looking out": None,
+        # "Wind-chimes hanging in a rainy window": None,
+        # "A detailed dollhouse in beautiful, colorful coral reef made with unreal engine": None,
+        # "A flock of butterflies in a dark foggy city with volumetric lighting": None,
+        # "A foggy city street with a ghostly flock of birds": None,
+        # "A painting the interior of a bus with light through the windows, in the style of edward hopper, orange color scheme": None,
+        # "A colorful, photorealistic piñata breaking open with a gray office in the background": None,
+        # "Pastel summer flowers growing out of a peaceful banjo under a vast sky": None,
+        # "A photorealistic Tyrannosaurus Rex skeleton looking at itself reflected in a rain puddle. Volumetric lighting.”": None,
+        # "A bight huge topographical map in the sky over a small red bicycle fallen in the street": None,
+        # "A bright huge topographical map in the sky over a small red bicycle fallen in the street": None,
+        # "A shiny trumpet in a peaceful, overgrown garden": None,
+        # "A sparse black and white painting of a museum skeleton of a T-Rex. The ground is wet and reflective.": None,
+
 }
 
-
-use_prompt_n_seed = {
-    "a cute, beautiful painting of a ball of hair that will soon roam the neighborhood riding a unicycle": 4765, # 4765
-    "A cute gecko eating a huge oreo": 345, # 345
-    "A rubber duck on a chess board": 9660,  # 9660
-    "A  beautiful painting of butterflies flying in golden light": 359, # 359
-    "A  beautiful painting of a rooster reading an algebra textbook": 9819, #9819,  4023, 2379
-    "A  beautiful painting of a rooster reading an algebra textbook": 4023, #9819,  4023, 2379
-    "A  beautiful painting of a rooster reading an algebra textbook": 2379, #9819,  4023, 2379
-    "A  beautiful painting of a rooster reading an algebra textbook": 7683, #9819,  4023, 2379, 7683
-    "A caterpillar doing math homework": 7626, # 7626, 4118
-    "A caterpillar doing math homework": 4118, # 7626, 4118
-    "A sparse black and white painting of a museum skeleton of a T-Rex. The ground is wet and reflective.": 2631, # 2631
-    "A sparse black and white painting of a museum skeleton of a T-Rex. The ground is wet and reflective.": 4662, # 4662
-    "A sparse black and white painting of a museum skeleton of a T-Rex. The ground is wet and reflective.": 8889, # 8889
-    "Fish playing soccer at the world cup": 2717, # 2717, 6803
-    "Fish playing soccer at the world cup": 6803, # 2717, 6803
-    "Fish playing soccer at the world cup": 9881, # 2717, 6803, 9881
-    "Flowers playing violin": 2148,
-    "A close-up of a violin in a bed of flowers": 277,
-    "A close-up of a violin in a bed of flowers": 264,
-    "A close-up of a violin in a bed of flowers": 4878,
-}
 
 if __name__ == '__main__':
 

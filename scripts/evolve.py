@@ -13,6 +13,7 @@ import time
 from pytorch_lightning import seed_everything
 from torch import autocast
 from contextlib import contextmanager, nullcontext
+# from stable_diffusion_videos import StableDiffusionWalkPipeline
 
 from ldm.util import instantiate_from_config
 from ldm.models.diffusion.ddim import DDIMSampler
@@ -48,6 +49,13 @@ def numpy_to_pil(images):
 
 
 def load_model_from_config(config, ckpt, verbose=False):
+    # pipe = StableDiffusionPipeline.from_pretrained(ckpt, 
+                                                # revision="fp16",
+                                                # torch_dtype=torch.float16, 
+                                                # use_auth_token=True,
+                                                
+                                                # )  
+    
     print(f"Loading model from {ckpt}")
     pl_sd = torch.load(ckpt, map_location="cpu")
     if "global_step" in pl_sd:
@@ -176,7 +184,7 @@ def main():
         "--prompt",
         type=str,
         nargs="?",
-        default="a painting of a virus monster playing guitar",
+        default="a painting of a dog playing guitar",
         help="the prompt to render"
     )
 
@@ -297,7 +305,7 @@ def main():
     parser.add_argument(
         "--config",
         type=str,
-        default="configs/stable-diffusion/v1-inference.yaml",
+        default="models/ldm/stable-diffusion-v1/config.yaml",
         help="path to config which constructs model",
     )
     parser.add_argument(

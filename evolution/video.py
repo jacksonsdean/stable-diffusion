@@ -20,18 +20,20 @@ if __name__ == "__main__":
 
     
     # prompt = "a perfectly round sphere bathed in golden yellow rays of beautiful sunshine, abstract digital painting. Trending on artstation."
-    prompt = "love is golden yellow sunshine, abstract digital painting. Trending on artstation."
-    # latent_history = torch.load( f"outputs/history_{prompt}.pt")
+    # prompt = "love is golden yellow sunshine, abstract digital painting. Trending on artstation."
+    prompt = "a psychedelic patterned bird with spread wings. A pastel color scheme in the style of Alex Grey."
+    
+    latent_history = torch.load( f"outputs/history_{prompt}.pt")
     
     
-    latent_history = torch.load( f"outputs/hist.pt")
+    # latent_history = torch.load( f"outputs/hist.pt")
     
     hist = [e for e in latent_history][:-1]
     print(len(hist))
     images = []
     
-    interps_per_image = 12
-    smoothing_inters = 12
+    interps_per_image = 4
+    smoothing_inters = 3
     
     interps = []
     for i in range(len(hist)-1):
@@ -60,9 +62,6 @@ if __name__ == "__main__":
         g = torch.Generator(device=pipeline.device).manual_seed(seed)
         outputs = pipeline(
             prompt=prompt,
-            # prompt_embeds = embeddings[i].unsqueeze(0),
-            height=512,  # use multiples of 64 if > 512. Multiples of 8 if < 512.
-            width=512,   # use multiples of 64 if > 512. Multiples of 8 if < 512.
             guidance_scale=7.5,         
             num_inference_steps=50,     
             # generator=g,      
